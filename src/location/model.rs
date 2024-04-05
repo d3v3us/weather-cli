@@ -1,16 +1,15 @@
 
+use clap::builder::Str;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug,Clone)]
 pub struct Location {
+    pub name: String,
     pub lat: String,
     pub lon: String,
 }
 
 impl Location {
-    pub fn new(latitude: String, longitude: String) -> Self {
-        Self { lat:latitude, lon:longitude }
-    }
 
     pub async fn resolve_location(city_name: &str) -> Result<Location, reqwest::Error> {
         let client = reqwest::Client::new();
@@ -33,7 +32,6 @@ impl Location {
             .first()
             .cloned()
             .expect("No Location Found");
-      
         Ok(location)
     }
 }

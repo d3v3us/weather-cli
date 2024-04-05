@@ -1,10 +1,11 @@
 use crate::api::model::*;
 use crate::api::weather_api_client_builder::*;
+use crate::location;
 
 pub trait WeatherProvider {
     fn get_weather_async(&self, 
-        lat: &str,
-        lon: &str,) -> impl std::future::Future<Output = Result<WeatherApiResponse, reqwest::Error>> + Send;
+        loc: &location::model::Location,
+    ) -> impl std::future::Future<Output = Result<WeatherApiResponse, reqwest::Error>> + Send;
 }
 
 pub struct WeatherApiClient{
@@ -20,17 +21,16 @@ impl WeatherProvider for WeatherApiClient {
     
     async fn get_weather_async(
         &self,
-        lat: &str,
-        lon: &str,
+       loc: &location::model::Location,
     ) -> Result<WeatherApiResponse, reqwest::Error> {
         let query_params: &[(&str, &str)] = &[
-            ("latitude", &lat),
-            ("longitude",&lon),
+            ("latitude", &loc.lat),
+            ("longitude",&loc.lat),
             ("current", "temperature_2m,wind_speed_10m"),
             ("hourly", "temperature_2m,relative_humidity_2m,wind_speed_10m"),
         ];
 
-        let res = self
+        let mut res = self
             .client
             .get(&self.base_url)
             .query(query_params)
@@ -38,6 +38,7 @@ impl WeatherProvider for WeatherApiClient {
             .await?
             .json::<WeatherApiResponse>()
             .await?;
+        res.weather.city=Some(loc.name.clone());
         Ok(res)
     }
 }
