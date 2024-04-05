@@ -16,13 +16,13 @@ async fn main() {
 
     match cli.command {
         Commands::GetWeather { city } => {
-            let resp = get_weather(&city).await;
+            let resp = get_weather_handler(&city).await;
             println!("{}",resp.weather)
         }
     }
 }
 
-async fn get_weather(city:&str) -> WeatherApiResponse {
+async fn get_weather_handler(city:&str) -> WeatherApiResponse {
     let loc= Location::resolve_location(city).await.unwrap();
     let weather_provider = WeatherApiClient::builder()
         .base_url("https://api.open-meteo.com/v1/forecast")
