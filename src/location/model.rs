@@ -16,7 +16,6 @@ impl Location {
         let client = reqwest::Client::new();
 
         let url = format!("https://nominatim.openstreetmap.org/search?q={}&format=json", city_name);
-        print!("{} ", url);
         log::debug!(
             "Querying {} location info from {}",
             city_name,

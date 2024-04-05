@@ -14,3 +14,4 @@ tokio-macros = "2.2.0"
 log = { version = "0.4", features = ["max_level_debug", "release_max_level_info"] }
 clap ={version = "4.5.4", features = ["derive"] } # Command line parsing library "4.5.4"
 clap_derive = "4.5.4"
+comfy-table = "7.1.0"
